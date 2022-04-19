@@ -1,0 +1,28 @@
+.mainForm{
+    /* width: 50vw; */
+}
+.mainModalDialog{
+    /* border: solid red; */
+}
+.mainModalContent{
+    width: 800px;
+    position: relative;
+    right: 10vw;
+}
+.modalBody{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-right: 50px;
+}
+
+.modalFooter{
+    justify-content: space-between;
+}
+
+.secondaryButtonDiv{
+    width: 170px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
