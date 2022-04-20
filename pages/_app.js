@@ -8,7 +8,16 @@ import { getAuth } from 'firebase/auth';
 export const UserContext = createContext()
 
 function MyApp({ Component, pageProps }) {
+  const userObjectFromResult = (result) => {
+    const userName = result?.user?.displayName
+    const email = result?.user?.email
+    const icon = result?.user?.photoURL
+    const loggedIn = true
+    return {userName, email, icon, loggedIn}
+}
+
   const [user, setUser] = useLocalStorage('user')
+  const reInit = (result) => {setUser(userObjectFromResult(result))}
     useEffect(() => {
         const auth = getAuth()
         auth.onAuthStateChanged((user) => {
@@ -22,7 +31,7 @@ function MyApp({ Component, pageProps }) {
     }, [])
   return (
     <>
-      <UserContext.Provider value={{user, setUser}}>
+      <UserContext.Provider value={{user, setUser, userObjectFromResult, reInit}}>
         <NavBar/>
         <Component {...pageProps}/>
       </UserContext.Provider>
