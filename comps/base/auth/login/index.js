@@ -27,7 +27,7 @@ const Login = ({data}) => {
             .required('Required'),
         password: Yup
             .string()
-            .min(5, 'Must have at least 5 characters')
+            .min(6, 'Must have at least 6 characters')
             .max(20, 'Must have less than 21 characters')
             .required('Required')
     })
@@ -36,7 +36,7 @@ const Login = ({data}) => {
         try {
             const auth = getAuth()
             const result = await signInWithEmailAndPassword(auth, email, password)
-            user?.reInit(result)
+            user?.init(result.user)
             setViewLogin(false)
         } catch (error) {
             if (error.message.includes('user-not-found')) formik.setFieldError('email', 'User not found')
@@ -53,7 +53,7 @@ const Login = ({data}) => {
             const auth = getAuth()
             const provider = new GoogleAuthProvider()
             const result = await signInWithPopup(auth, provider)
-            user.reInit(result)
+            user.init(result.user)
             setViewLogin(false)
         } catch (error) {
             console.log(error.message)

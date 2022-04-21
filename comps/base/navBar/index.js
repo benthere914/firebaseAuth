@@ -16,9 +16,9 @@ const NavBar = () => {
         <>
             <Navbar bg='dark' variant='dark'>
                 <Nav className={styles.main}>
-                    <Link passHref href='/test'><Nav.Link>My Dog Loki</Nav.Link></Link>
+                    <Link passHref href='/'><Nav.Link>My Dog Loki</Nav.Link></Link>
                     <div className={styles.inLine}>
-                        {user?.user.loggedIn ? (
+                        {user?.user?.loggedIn ? (
                             <>
                                 <Link passHref href='/myAccount'><Nav.Link>My Account</Nav.Link></Link>
                                 <Nav.Link onClick={() => {setViewLogout(true)}}>Log Out</Nav.Link>

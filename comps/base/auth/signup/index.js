@@ -32,17 +32,17 @@ const SignUp = ({data}) => {
             .required('Required'),
         userName: Yup
             .string()
-            .min(5, 'Must hava at least 5 characters')
+            .min(5, 'Must hava at least 6 characters')
             .max(20, 'Must have no more than 20 characters')
             .required('Required'),
         password: Yup
             .string()
-            .min(5, 'Must have at least 5 characters')
-            .max(20, 'Must have less than 21 characters')
+            .min(6, 'Must have at least 6 characters')
+            .max(20, 'Must have no more than 20 characters')
             .required('Required'),
         confirmPassword: Yup
             .string()
-            .min(5, 'Must have at least 5 characters')
+            .min(6, 'Must have at least 6 characters')
             .max(20, 'Must have no more than 20 characters')
             .required('Required')
             .test('passwordMatches', 'does not match', (value, context) => {
@@ -63,19 +63,22 @@ const SignUp = ({data}) => {
             const type = photoType(photo)
             if (!type) return formik.setFieldError('photo', 'File Not Selected')
         } catch (error) {
-            return setCustomError('There was an internal error. Please try again')
+            return setCustomError(`There was an internal error. - ${error.message}`)
         }
         try {await createUserWithEmailAndPassword(auth, email, password)} 
         catch (error) {
-            if (error.message.includes('email-already-in-use')) formik.setFieldError('email', 'Email Already In Use')
-            return setCustomError('Did not create account - Please try again')
+            return (error.message.includes('invalid-email') 
+            ? formik.setFieldError('email', 'Invalid Email') 
+            : error.message.includes('email-already-in-use') 
+            ? formik.setFieldError('email', 'Email Already In Use') 
+            : setCustomError(`Did not create - ${error.message}`) )
         }
         try {
             const result = await signInWithEmailAndPassword(auth, email, password)
-            user.reInit(result)
+            user.init(result.user)
         } 
         catch (error) {
-            return setCustomError('Created Account but could not log in - Please reload the page and attempt to login again')
+            return setCustomError(`Created Account but could not log in - ${error.message}`)
         }
         try {
             const type = photoType(photo)
@@ -84,9 +87,9 @@ const SignUp = ({data}) => {
             await uploadBytes(storageRef, photo)
             const photoURL =  await getDownloadURL(storageRef)
             await updateProfile(auth.currentUser, {displayName: userName, photoURL})
+            user.setUserValue('photoURL', photoURL)
         } catch (error) {
-            console.log(error)
-            return setCustomError('Created Account but could not set profile picture - visit your account page to try manually changing the profile photo.')
+            return setCustomError(`Created Account but could not set profile picture - ${error.message}`)
         }
         setViewSignUp(false)
     }
@@ -99,10 +102,10 @@ const SignUp = ({data}) => {
             const auth = getAuth()
             const provider = new GoogleAuthProvider()
             const result = await signInWithPopup(auth, provider)
-            user.reInit(result)
+            user.init(result.user)
             setViewSignUp(false)
         } catch (error) {
-            setCustomError('There was an issue signing up with google')
+            setCustomError(`There was an issue signing up with google - ${error.message}`)
         }
     }
 

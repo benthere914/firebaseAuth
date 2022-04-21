@@ -7,10 +7,7 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../_app';
 import Reauthenticate from '../../comps/base/auth/reauthenticate'
 import ChangeAccountData from '../../comps/pages/myAccount/changeAccountData';
-import { updateEmail_ } from '../../utils/firebase/updateEmail'
-import { updatePassword_ } from '../../utils/firebase/updatePassword'
-import { updateUserName } from '../../utils/firebase/changeUserName'
-import { uploadProfilePhoto } from '../../utils/firebase/uploadProfilePhoto'
+
 import { Form } from 'react-bootstrap';
 import Image from 'next/image';
 
@@ -18,6 +15,8 @@ const myAccount = () => {
     const user = useContext(UserContext)
     const [showChangePassword, setShowChangePassword] = useState(false)
     const [viewReauthenticate, setViewReauthenticate] = useState(false)
+    const [authenticated, setAuthenticated] = useState(false)
+    
     const [value, setValue] = useState('')
     const [userName, setUserName] = useState('')
     const [email, setEmail] = useState('')
@@ -37,7 +36,7 @@ const myAccount = () => {
     }, [])
     return (  
         <>
-            {viewReauthenticate ? <Reauthenticate data={[viewReauthenticate, setViewReauthenticate, setShowChangePassword]}/> : (
+            {viewReauthenticate ? <Reauthenticate data={[viewReauthenticate, setViewReauthenticate, setShowChangePassword, authenticated, setAuthenticated]}/> : (authenticated && 
 
                 <div className={styles.main}>
                 <div className={styles.parentTabs}>
@@ -49,7 +48,7 @@ const myAccount = () => {
                                     <Form.Control placeHolder={user?.user.userName} value={userName} onChange={(e) => {setUserName(e.target.value)}}/>
                                 </Form.Group>
                                 <div className={styles.updateButtonDiv}>
-                                    <Button onClick={() => {updateUserName(userName, user?.setUser)}}>Update User Name</Button>
+                                    <Button onClick={() => {}}>Update User Name</Button>
                                 </div>
 
                             </Form>
@@ -61,7 +60,7 @@ const myAccount = () => {
                                     <Form.Control placeHolder={user?.user.email} value={email} onChange={(e) => {setEmail(e.target.value)}}/>
                                 </Form.Group>
                                 <div className={styles.updateButtonDiv}>
-                                    <Button onClick={() => {updateEmail_(email, user?.setUser)}}>Update Email</Button>
+                                    <Button onClick={() => {}}>Update Email</Button>
                                 </div>
                             </Form>
                         </Tab>
@@ -72,7 +71,7 @@ const myAccount = () => {
                                     <Form.Control accept={'image/*'} type={'file'} onChange={(e) => {setPhoto(e.target.files[0]); setPhotoUrl(URL.createObjectURL(e.target.files[0]))}}/>
                                 </Form.Group>
                                 <div className={styles.updateButtonDiv}>
-                                    <Button onClick={() => {uploadProfilePhoto(photo, user?.user.email, user?.setUser)}}>Update Profile picture</Button>
+                                    <Button onClick={() => {}}>Update Profile picture</Button>
                                 </div>
 
                             </Form>
@@ -82,7 +81,7 @@ const myAccount = () => {
                             <Form>
                                 <Form.Group>
                                     <Form.Label>New Password</Form.Label>
-                                    <Form.Control value={newPassword} onChange={(e) => {setNewPassword(e.target.value)}}/>
+                                    <Form.Control value={newPassword} onChange={(e) => {}}/>
                                 </Form.Group>
                                 <div className={styles.updateButtonDiv}>
                                     <Button>Update Password</Button>

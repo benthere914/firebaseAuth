@@ -9,7 +9,8 @@ const Logout = ({data}) => {
     const logOutHandler = () => {
         const auth = getAuth()
         auth.signOut()
-        user.setUser({loggedIn: false})
+        user.reset()
+        user.setUserValue('loggedIn', false)
         setViewLogout(false)
     }
     return (  
